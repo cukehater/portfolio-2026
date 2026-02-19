@@ -1,0 +1,248 @@
+/*
+ * CSS Reset - Modern Reset for Three.js Journey
+ *
+ * 이 파일은 Three.js Journey 프로젝트를 위한 현대적인 CSS 리셋 스타일시트입니다.
+ * 브라우저 간 일관된 스타일링을 제공하고, 기본 스타일을 제거하여 개발자가
+ * 더 나은 제어권을 가질 수 있도록 합니다.
+ */
+
+/*
+ * 박스 크기 규칙 (Box sizing rules)
+ *
+ * 모든 요소와 그 가상 요소들(::before, ::after)에 대해 box-sizing을 border-box로 설정합니다.
+ * 이렇게 하면 요소의 너비와 높이에 padding과 border가 포함되어 계산되므로,
+ * 레이아웃 계산이 더 직관적이고 예측 가능해집니다.
+ *
+ * 예: width: 100px, padding: 10px, border: 5px인 경우
+ * - content-box: 실제 너비 = 100 + 10*2 + 5*2 = 130px
+ * - border-box: 실제 너비 = 100px (padding과 border가 내부에 포함됨)
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/*
+   * 기본 마진과 패딩 제거 (Remove default margin and padding)
+   *
+   * 모든 요소의 기본 마진과 패딩을 0으로 설정합니다.
+   * 브라우저마다 다른 기본 스타일을 제거하여 일관된 시작점을 제공합니다.
+   * 개발자가 필요한 경우에만 마진과 패딩을 명시적으로 추가할 수 있습니다.
+   */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/*
+   * 폰트 크기 자동 조정 방지 (Prevent font size inflation)
+   *
+   * iOS Safari와 같은 일부 모바일 브라우저는 가로 모드에서 텍스트를 자동으로 확대하는
+   * 기능이 있습니다. 이 기능을 비활성화하여 개발자가 설정한 폰트 크기가
+   * 일관되게 유지되도록 합니다.
+   *
+   * - -moz-text-size-adjust: Firefox용
+   * - -webkit-text-size-adjust: WebKit 기반 브라우저용 (Chrome, Safari)
+   * - text-size-adjust: 표준 속성
+   */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/*
+   * 특정 요소들의 기본 마진 제거 (Remove default margin in favour of better control)
+   *
+   * body, 제목 태그(h1-h6), 문단(p), figure, blockquote, 정의 목록(dl, dd) 등의
+   * 요소들은 브라우저에서 기본적으로 마진을 가지고 있습니다.
+   * 이 마진들을 제거하여 개발자가 CSS에서 더 정확하게 제어할 수 있도록 합니다.
+   */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/*
+   * 역할이 있는 리스트의 기본 스타일 제거 (Remove list styles on ul, ol elements with a list role)
+   *
+   * role="list" 속성을 가진 ul, ol 요소의 리스트 스타일(불릿 포인트, 번호)을 제거합니다.
+   * 이는 접근성을 위해 role 속성을 사용하면서도 시각적 스타일을 제거하고 싶을 때 유용합니다.
+   * 예를 들어, 네비게이션 메뉴를 리스트로 마크업하되 불릿 포인트는 표시하지 않는 경우입니다.
+   */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/*
+   * body 요소의 기본 설정 (Set core body defaults)
+   *
+   * body 요소에 기본적인 스타일을 설정합니다:
+   * - min-height: 100vh: 최소 높이를 뷰포트 높이의 100%로 설정하여 페이지가
+   *   짧은 콘텐츠일 때도 전체 화면을 채우도록 합니다.
+   * - line-height: 1.5: 줄 간격을 1.5로 설정하여 가독성을 향상시킵니다.
+   */
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/*
+   * 제목과 인터랙티브 요소의 줄 간격 설정 (Set shorter line heights on headings and interactive elements)
+   *
+   * 제목(h1-h4)과 인터랙티브 요소(button, input, label)에 더 짧은 줄 간격(1.1)을 설정합니다.
+   * 이렇게 하면 제목이 더 컴팩트하게 보이고, 버튼과 입력 필드의 텍스트가
+   * 수직 중앙 정렬이 더 잘 됩니다.
+   */
+h1,
+h2,
+h3,
+h4,
+button,
+input,
+label {
+  line-height: 1.1;
+}
+
+/*
+   * 제목의 텍스트 줄바꿈 균형 조정 (Balance text wrapping on headings)
+   *
+   * text-wrap: balance는 제목 텍스트가 여러 줄로 나뉠 때 각 줄의 길이를
+   * 최대한 균형있게 맞추는 기능입니다. 이렇게 하면 제목이 더 보기 좋고 읽기 쉽습니다.
+   *
+   * 예: "This is a very long heading"이 두 줄로 나뉠 때
+   * - 일반: "This is a very long" / "heading"
+   * - balance: "This is a very" / "long heading" (더 균형잡힌 분배)
+   */
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+/*
+   * 클래스가 없는 링크 요소의 기본 스타일 (A elements that don't have a class get default styles)
+   *
+   * 클래스 속성이 없는 링크(a) 요소에 기본 스타일을 적용합니다:
+   * - text-decoration-skip-ink: auto: 밑줄이 글자의 하강부(descender)와 겹치지 않도록 합니다.
+   *   예를 들어 'g', 'p', 'y' 같은 글자 아래 부분과 밑줄이 겹치지 않아 더 깔끔해 보입니다.
+   * - color: currentColor: 링크 색상을 부모 요소의 텍스트 색상을 상속받도록 합니다.
+   *   이렇게 하면 링크가 주변 텍스트와 자연스럽게 어울립니다.
+   */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  color: currentColor;
+}
+
+/*
+   * 이미지 작업을 쉽게 만들기 (Make images easier to work with)
+   *
+   * 이미지, picture, SVG 요소에 대해:
+   * - max-width: 100%: 이미지가 부모 요소의 너비를 초과하지 않도록 합니다.
+   *   반응형 디자인에서 이미지가 컨테이너를 벗어나지 않게 하는 중요한 규칙입니다.
+   * - display: block: 이미지를 블록 요소로 만들어 하단의 작은 공백(인라인 요소의 baseline 공백)을 제거합니다.
+   */
+img,
+picture,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+/*
+   * 입력 요소와 버튼의 폰트 상속 (Inherit fonts for inputs and buttons)
+   *
+   * input, button, textarea, select 요소들이 부모 요소의 폰트 스타일을 상속받도록 합니다.
+   * 브라우저는 이러한 요소들에 기본 폰트를 적용하는데, 이를 제거하여
+   * 페이지 전체의 폰트 스타일과 일관성을 유지합니다.
+   */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/*
+   * rows 속성이 없는 textarea의 최소 높이 설정 (Make sure textareas without a rows attribute are not tiny)
+   *
+   * rows 속성이 없는 textarea 요소에 최소 높이(10em)를 설정합니다.
+   * rows 속성이 없으면 textarea가 매우 작게 렌더링될 수 있으므로,
+   * 사용자가 입력하기에 충분한 크기를 보장합니다.
+   */
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+/*
+   * 앵커 링크 대상 요소의 스크롤 여백 (Anything that has been anchored to should have extra scroll margin)
+   *
+   * :target 가상 클래스는 URL의 해시(#)로 연결된 요소를 선택합니다.
+   * 예: https://example.com#section1 → id="section1"인 요소가 :target이 됩니다.
+   *
+   * scroll-margin-block: 5ex는 스크롤 시 해당 요소가 뷰포트 상단에 정확히 위치하지 않고
+   * 5ex(현재 폰트 크기의 5배)만큼 여백을 두도록 합니다.
+   * 이렇게 하면 고정된 헤더가 있을 때 앵커 링크로 이동했을 때 콘텐츠가 헤더에 가려지지 않습니다.
+   */
+:target {
+  scroll-margin-block: 5ex;
+}
+
+/*
+   * 애니메이션 비활성화 설정을 선호하는 사용자를 위한 규칙 (Remove animations for people who've turned them off)
+   *
+   * prefers-reduced-motion 미디어 쿼리는 사용자가 시스템 설정에서 애니메이션을 줄이도록
+   * 설정했는지 확인합니다. 이는 움직임에 민감한 사용자나 시각적 불편함을 느끼는 사용자를 위한
+   * 접근성 기능입니다.
+   *
+   * 사용자가 애니메이션 감소를 선호하는 경우:
+   * - animation-duration: 0.01ms: 애니메이션 지속 시간을 거의 0으로 설정
+   * - animation-iteration-count: 1: 애니메이션 반복 횟수를 1회로 제한
+   * - transition-duration: 0.01ms: 트랜지션 지속 시간을 거의 0으로 설정
+   * - scroll-behavior: auto: 부드러운 스크롤을 비활성화
+   *
+   * !important를 사용하여 다른 스타일보다 우선순위를 높입니다.
+   */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+   * WebGL 캔버스 스타일 (.webgl)
+   *
+   * Three.js에서 사용하는 WebGL 캔버스에 적용되는 스타일입니다:
+   * - position: fixed: 뷰포트를 기준으로 고정 위치에 배치합니다.
+   *   스크롤해도 항상 같은 위치에 유지됩니다.
+   * - top: 0; left: 0: 화면의 왼쪽 상단 모서리에 위치시킵니다.
+   * - width: 100%; height: 100%: 전체 뷰포트 너비와 높이를 차지합니다.
+   *
+   * 이렇게 설정하면 WebGL 캔버스가 전체 화면을 덮는 배경 레이어처럼 동작하며,
+   * Three.js 3D 장면이 화면 전체에 렌더링됩니다.
+   */
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
