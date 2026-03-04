@@ -239,10 +239,12 @@ textarea:not([rows]) {
    * 이렇게 설정하면 WebGL 캔버스가 전체 화면을 덮는 배경 레이어처럼 동작하며,
    * Three.js 3D 장면이 화면 전체에 렌더링됩니다.
    */
-.webgl {
+.webgl,
+#canvas {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  display: block;
 }

@@ -1,6 +1,6 @@
-import * as THREE from "three";
-import EventEmitter from "./event-emitter.js";
-import { GLTFLoader } from "three/examples/jsm/Addons.js";
+import * as THREE from 'three';
+import EventEmitter from './event-emitter.js';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 export default class Resources extends EventEmitter {
   constructor(sources) {
@@ -26,15 +26,15 @@ export default class Resources extends EventEmitter {
   startLoading() {
     // Load each source
     for (const source of this.sources) {
-      if (source.type === "gltfModel") {
+      if (source.type === 'gltfModel') {
         this.loaders.gltfLoader.load(source.path, (file) => {
           this.sourceLoaded(source, file);
         });
-      } else if (source.type === "texture") {
+      } else if (source.type === 'texture') {
         this.loaders.textureLoader.load(source.path, (file) => {
           this.sourceLoaded(source, file);
         });
-      } else if (source.type === "cubeTexture") {
+      } else if (source.type === 'cubeTexture') {
         this.loaders.cubeTextureLoader.load(source.path, (file) => {
           this.sourceLoaded(source, file);
         });
@@ -48,7 +48,7 @@ export default class Resources extends EventEmitter {
     this.loaded++;
 
     if (this.loaded === this.toLoad) {
-      this.trigger("ready");
+      this.trigger('ready');
     }
   }
 }

@@ -1,15 +1,15 @@
-import restart from "vite-plugin-restart";
+import restart from 'vite-plugin-restart';
 
 export default {
-  root: "src/",
-  publicDir: "../static/",
+  root: 'src/',
+  publicDir: '../static/',
   server: {
     host: true,
   },
   build: {
-    outDir: "../dist",
+    outDir: '../dist',
     emptyOutDir: true,
     sourcemap: true,
   },
-  plugins: [restart({ restart: ["../static/**"] })],
+  plugins: [restart({ restart: ['../static/**'] })],
 };
