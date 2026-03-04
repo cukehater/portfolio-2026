@@ -1,7 +1,13 @@
 import * as THREE from 'three';
-import App from '../app.js';
+import App from '../index.ts';
+import type Resources from '../utils/resources.ts';
 
 export default class Environment {
+  app: App;
+  scene: THREE.Scene;
+  resources: InstanceType<typeof Resources>;
+  sunLight!: THREE.DirectionalLight;
+
   constructor() {
     this.app = new App();
     this.scene = this.app.scene;
@@ -10,7 +16,7 @@ export default class Environment {
     this.setSunLight();
   }
 
-  setSunLight() {
+  setSunLight(): void {
     this.sunLight = new THREE.DirectionalLight('#ffffff', 4);
     this.sunLight.castShadow = true;
     this.sunLight.shadow.camera.far = 15;

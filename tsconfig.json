@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // 컴파일 결과 JS 버전
+    "useDefineForClassFields": true, // class 필드 ES2022 방식
+    "module": "ESNext", // 모듈 시스템
+    "lib": ["ESNext", "DOM", "DOM.Iterable"], // 타입 참조 라이브러리
+    "skipLibCheck": true, // node_modules .d.ts 검사 생략
+    "moduleResolution": "bundler", // Vite 등 번들러 기준 경로 해석
+    "resolveJsonModule": true, // .json import 허용
+    "isolatedModules": true, // 파일 단위 트랜스파일 (Vite 호환)
+    "noEmit": true, // JS 미생성 (Vite가 트랜스파일)
+    "strict": true, // strict 모드 전부
+    "noUnusedLocals": true, // 사용하지 않는 지역 변수 시 에러
+    "noUnusedParameters": true, // 사용하지 않는 매개변수 시 에러
+    "noFallthroughCasesInSwitch": true, // switch fall-through 시 에러
+    "esModuleInterop": true, // CJS/ESM 상호 운용
+    "allowSyntheticDefaultImports": true, // default 없는 모듈도 default import 허용
+    "allowImportingTsExtensions": true // import 시 .ts 확장자 허용
+  },
+  "include": ["src", "vite.config.ts"], // 타입 체크 대상
+  "exclude": ["node_modules", "dist", "static"] // 제외 경로
+}

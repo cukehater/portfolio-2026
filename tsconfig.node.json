@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // 루트 설정용 컴파일 대상
+    "module": "ESNext", // 모듈 출력
+    "moduleResolution": "bundler", // 모듈 해석
+    "strict": true, // 엄격 타입 체크
+    "skipLibCheck": true // 선언 파일 검사 생략
+  },
+  "include": ["vite.config.ts", "eslint.config.js"] // 루트 설정 파일만
+}

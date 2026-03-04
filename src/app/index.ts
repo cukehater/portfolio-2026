@@ -8,48 +8,52 @@
  */
 import * as THREE from 'three';
 
-import Sizes from './utils/sizes.js';
-import World from './world/world.js';
-import Camera from './camera.js';
-import Renderer from './renderer.js';
-import Time from './utils/time.js';
-import Resources from './utils/resources.js';
-import sources from './sources.js';
+import Sizes from './utils/sizes.ts';
+import World from './world/world.ts';
+import Camera from './camera.ts';
+import Renderer from './renderer.ts';
+import Time from './utils/time.ts';
+import Resources from './utils/resources.ts';
+import sources from './sources.ts';
 
-let instance = null;
+let instance: App | null = null;
 
 export default class App {
-  constructor(_canvas) {
-    // 싱글톤: 이미 인스턴스가 있으면 새로 만들지 않고 기존 인스턴스 반환
+  canvas!: HTMLCanvasElement | null;
+  sizes!: Sizes;
+  time!: Time;
+  resources!: Resources;
+  scene!: THREE.Scene;
+  camera!: Camera;
+  renderer!: Renderer;
+  world!: World;
+
+  constructor(_canvas?: HTMLCanvasElement | null) {
     if (instance) return instance;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias -- singleton pattern
     instance = this;
 
-    this.canvas = _canvas;
+    this.canvas = _canvas ?? null;
 
-    // 유틸: 화면 크기, 시간(델타), 리소스 로더
     this.sizes = new Sizes();
     this.time = new Time();
     this.resources = new Resources(sources);
-    // Three.js 씬 (3D 공간 컨테이너)
     this.scene = new THREE.Scene();
-    // 카메라·렌더러·월드는 내부에서 new App()으로 이 인스턴스를 참조함
     this.camera = new Camera();
     this.renderer = new Renderer();
     this.world = new World();
 
-    // 창 크기 변경 시 카메라 비율·렌더러 크기 갱신
     this.sizes.on('resize', this.resize.bind(this));
-    // requestAnimationFrame마다 update 호출 → 카메라·월드 업데이트 후 렌더
     this.time.on('tick', this.update.bind(this));
   }
 
-  resize() {
+  resize(): void {
     this.camera.resize();
     this.renderer.resize();
   }
 
   /** 매 프레임 호출: 카메라(차 추적) → 월드(차 이동 등) → 렌더 */
-  update() {
+  update(): void {
     this.camera.update();
     this.world.update();
     this.renderer.update();

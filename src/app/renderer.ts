@@ -6,9 +6,18 @@
  * - 매 프레임 scene + camera로 한 프레임 렌더
  */
 import * as THREE from 'three';
-import App from './app.js';
+import App from './index.ts';
+import type Camera from './camera.ts';
+import type Sizes from './utils/sizes.ts';
 
 export default class Renderer {
+  app: App;
+  canvas: HTMLCanvasElement | null;
+  sizes: InstanceType<typeof Sizes>;
+  scene: THREE.Scene;
+  camera: Camera;
+  instance!: THREE.WebGLRenderer;
+
   constructor() {
     this.app = new App();
     this.canvas = this.app.canvas;
@@ -19,10 +28,9 @@ export default class Renderer {
     this.setInstance();
   }
 
-  /** WebGL 렌더러 생성, 해상도·픽셀비·그림자 설정 */
-  setInstance() {
+  setInstance(): void {
     this.instance = new THREE.WebGLRenderer({
-      canvas: this.canvas,
+      canvas: this.canvas as HTMLCanvasElement,
       antialias: true,
     });
     this.instance.setSize(this.sizes.width, this.sizes.height);
@@ -31,14 +39,12 @@ export default class Renderer {
     this.instance.shadowMap.type = THREE.PCFSoftShadowMap;
   }
 
-  /** 창 크기 변경 시 렌더 출력 크기·픽셀비 갱신 */
-  resize() {
+  resize(): void {
     this.instance.setSize(this.sizes.width, this.sizes.height);
     this.instance.setPixelRatio(this.sizes.pixelRatio);
   }
 
-  /** 매 프레임: 현재 씬과 카메라로 한 장면 렌더 */
-  update() {
+  update(): void {
     this.instance.render(this.scene, this.camera.instance);
   }
 }

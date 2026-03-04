@@ -81,8 +81,8 @@ dd {
    * 이는 접근성을 위해 role 속성을 사용하면서도 시각적 스타일을 제거하고 싶을 때 유용합니다.
    * 예를 들어, 네비게이션 메뉴를 리스트로 마크업하되 불릿 포인트는 표시하지 않는 경우입니다.
    */
-ul[role="list"],
-ol[role="list"] {
+ul[role='list'],
+ol[role='list'] {
   list-style: none;
 }
 

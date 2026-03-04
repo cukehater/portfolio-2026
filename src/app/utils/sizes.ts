@@ -4,9 +4,13 @@
  * - width, height, pixelRatio를 보관
  * - resize 이벤트 시 갱신 후 "resize" 트리거 → App이 카메라·렌더러 리사이즈에 사용
  */
-import EventEmitter from './event-emitter.js';
+import EventEmitter from './event-emitter.ts';
 
 export default class Sizes extends EventEmitter {
+  width: number;
+  height: number;
+  pixelRatio: number;
+
   constructor() {
     super();
 
@@ -18,7 +22,7 @@ export default class Sizes extends EventEmitter {
     window.addEventListener('resize', this.resize.bind(this));
   }
 
-  resize() {
+  resize(): void {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.pixelRatio = Math.min(window.devicePixelRatio, 2);

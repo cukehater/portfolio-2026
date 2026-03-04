@@ -4,9 +4,14 @@
  * - 매 프레임 delta(이전 프레임과의 시간차), elapsed(시작 이후 경과) 갱신
  * - "tick" 이벤트로 App.update()가 호출됨 → 카메라·월드·렌더 한 사이클
  */
-import EventEmitter from './event-emitter.js';
+import EventEmitter from './event-emitter.ts';
 
 export default class Time extends EventEmitter {
+  start: number;
+  current: number;
+  elapsed: number;
+  delta: number;
+
   constructor() {
     super();
 
@@ -18,7 +23,7 @@ export default class Time extends EventEmitter {
     window.requestAnimationFrame(this.tick.bind(this));
   }
 
-  tick() {
+  tick(): void {
     const currentTime = Date.now();
     this.delta = currentTime - this.current;
     this.current = currentTime;
