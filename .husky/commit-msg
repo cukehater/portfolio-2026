@@ -1,0 +1,7 @@
+if npx --no-install commitlint --edit "$1"; then
+  echo "✅ 커밋 컨벤션을 통과했습니다." >&2
+  exit 0
+else
+  echo "❌ 커밋 메시지가 컨벤션을 준수하지 않습니다." >&2
+  exit 1
+fi
