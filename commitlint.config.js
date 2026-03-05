@@ -24,19 +24,21 @@ export default {
         'test', // 테스트 추가·수정
       ],
     ],
+
     // type은 비어 있으면 안 됨 (반드시 위 목록 중 하나)
     'type-empty': [2, 'never'],
+    'subject-empty': [2, 'never'], // subject 비어 있으면 에러
+
     // 이하 규칙 비활성화 — scope·subject·본문 등 자유 작성
-    'type-case': [0],
-    'scope-case': [0],
-    'scope-empty': [0],
-    'subject-case': [0],
-    'subject-empty': [0],
-    'subject-full-stop': [0],
-    'header-max-length': [0],
-    'body-leading-blank': [0],
-    'body-max-line-length': [0],
-    'footer-leading-blank': [0],
-    'footer-max-line-length': [0],
+    'type-case': [0], // type 대소문자 무시
+    'scope-case': [0], // scope 대소문자 무시
+    'scope-empty': [0], // scope 비어 있어도 괜찮음
+    'subject-case': [0], // subject 대소문자 무시
+    'subject-full-stop': [0], // subject 끝에 마침표 무시
+    'header-max-length': [0], // header 최대 길이 무시
+    'body-leading-blank': [0], // body 첫 줄 비어 있어도 괜찮음
+    'body-max-line-length': [0], // body 최대 줄 길이 무시
+    'footer-leading-blank': [0], // footer 첫 줄 비어 있어도 괜찮음
+    'footer-max-line-length': [0], // footer 최대 줄 길이 무시
   },
 };
