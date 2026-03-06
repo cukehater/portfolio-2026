@@ -9,7 +9,7 @@ export default {
   build: {
     outDir: '../dist', // 빌드 출력 경로
     emptyOutDir: true, // 빌드 전 비우기
-    sourcemap: true, // 소스맵 생성
+    sourcemap: false, // 소스맵 생성
   },
   plugins: [restart({ restart: ['../static/**'] })], // static/ 변경 시 재시작
 };

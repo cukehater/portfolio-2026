@@ -6,7 +6,7 @@
  * - Shift 누르면 부스터(가속) 속도 적용
  */
 import * as THREE from 'three';
-import type App from '..';
+import App from '../index.ts';
 
 const CAR_SPEED = 8;
 const CAR_SPEED_BOOST = 18;
@@ -78,10 +78,8 @@ export default class Car {
   update(): void {
     const deltaSec = ((this.app?.time?.delta ?? 16) as number) * 0.001;
 
-    const movingForward =
-      this.keys['w'] || this.keys['W'] || this.keys['ArrowUp'];
-    const movingBackward =
-      this.keys['s'] || this.keys['S'] || this.keys['ArrowDown'];
+    const movingForward = this.keys['ArrowUp'];
+    const movingBackward = this.keys['ArrowDown'];
     const isMoving = movingForward || movingBackward;
 
     const targetSpeed = this.keys['Shift'] ? CAR_SPEED_BOOST : CAR_SPEED;
@@ -111,10 +109,8 @@ export default class Car {
         ? 1
         : Math.min(1, Math.abs(this.velocity) / CAR_SPEED);
       const turn = CAR_TURN * deltaSec * speedRatio;
-      if (this.keys['a'] || this.keys['A'] || this.keys['ArrowLeft'])
-        this.group.rotation.y += turn * steerDir;
-      if (this.keys['d'] || this.keys['D'] || this.keys['ArrowRight'])
-        this.group.rotation.y -= turn * steerDir;
+      if (this.keys['ArrowLeft']) this.group.rotation.y += turn * steerDir;
+      if (this.keys['ArrowRight']) this.group.rotation.y -= turn * steerDir;
     }
   }
 }

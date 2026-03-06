@@ -14,6 +14,7 @@ export default {
         'build', // 빌드·의존성·번들 변경
         'chore', // 기타 작업 (프로덕션 코드 변경 없음)
         'ci', // CI 설정 변경
+        'design', // 스타일 변경
         'docs', // 문서만 변경 (README 등)
         'feat', // 새 기능 추가
         'fix', // 버그 수정

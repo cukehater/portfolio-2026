@@ -2,13 +2,13 @@
  * Renderer — WebGL로 씬을 캔버스에 그리는 역할
  *
  * - antialias로 계단 현상 완화
- * - shadowMap으로 DirectionalLight 그림자 표시 (PCFSoftShadowMap)
+ * - shadowMap으로 DirectionalLight 그림자 표시 (PCFShadowMap)
  * - 매 프레임 scene + camera로 한 프레임 렌더
  */
 import * as THREE from 'three';
 import App from './index.ts';
-import type Camera from './camera.ts';
-import type Sizes from './utils/sizes.ts';
+import Camera from './camera.ts';
+import Sizes from './utils/sizes.ts';
 
 export default class Renderer {
   app: App;
@@ -36,7 +36,7 @@ export default class Renderer {
     this.instance.setSize(this.sizes.width, this.sizes.height);
     this.instance.setPixelRatio(this.sizes.pixelRatio);
     this.instance.shadowMap.enabled = true;
-    this.instance.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.instance.shadowMap.type = THREE.PCFShadowMap;
   }
 
   resize(): void {

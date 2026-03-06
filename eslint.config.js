@@ -30,11 +30,13 @@ export default [
       importPlugin,
     },
     rules: {
-      'no-unused-vars': 'off', // 아래 TS 규칙으로 대체
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ], // _ 접두사 무시
+      '@typescript-eslint/no-this-alias': 'off', // this 별칭 무시 (싱글톤 패턴 사용)
+
+      'no-unused-vars': 'off', // 아래 TS 규칙으로 대체
       'no-console': ['warn', { allow: ['warn', 'error'] }], // console.log 금지
       eqeqeq: ['error', 'always'], // ===/!== 사용
       'no-implicit-coercion': 'warn', // 암묵적 타입 변환 경고

@@ -4,5 +4,5 @@
 import App from './app/index.ts';
 import './style.css';
 
-const canvas = document.getElementById('canvas');
-new App(canvas instanceof HTMLCanvasElement ? canvas : null);
+const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+new App(canvas);

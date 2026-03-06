@@ -15,6 +15,7 @@ import Renderer from './renderer.ts';
 import Time from './utils/time.ts';
 import Resources from './utils/resources.ts';
 import sources from './sources.ts';
+import Debug from './utils/debug.ts';
 
 let instance: App | null = null;
 
@@ -27,10 +28,11 @@ export default class App {
   camera!: Camera;
   renderer!: Renderer;
   world!: World;
+  debug!: Debug;
 
-  constructor(_canvas?: HTMLCanvasElement | null) {
+  constructor(_canvas?: HTMLCanvasElement) {
     if (instance) return instance;
-    // eslint-disable-next-line @typescript-eslint/no-this-alias -- singleton pattern
+
     instance = this;
 
     this.canvas = _canvas ?? null;
@@ -38,6 +40,7 @@ export default class App {
     this.sizes = new Sizes();
     this.time = new Time();
     this.resources = new Resources(sources);
+    this.debug = new Debug();
     this.scene = new THREE.Scene();
     this.camera = new Camera();
     this.renderer = new Renderer();

@@ -1,10 +1,10 @@
-import type { SourceItem } from './utils/resources';
+import { SourceItem } from './utils/resources.ts';
 
 const sources: SourceItem[] = [
   {
-    name: 'feathersMcGrawModel',
+    name: 'acousticGuitarModel',
     type: 'gltfModel',
-    path: '/models/feathers_mc_graw/scene.gltf',
+    path: '/models/acoustic_guitar/acoustic_guitar.glb',
   },
 ];
 

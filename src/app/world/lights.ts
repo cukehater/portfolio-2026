@@ -19,12 +19,12 @@ export default class Lights {
   }
 
   setAmbient(): void {
-    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambient = new THREE.AmbientLight(0xfff5e0, 0.5);
     this.scene.add(ambient);
   }
 
   setDirectional(): void {
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const dirLight = new THREE.DirectionalLight(0xfff0cc, 1);
     dirLight.position.set(10, 20, 10);
     dirLight.castShadow = true;
     dirLight.shadow.mapSize.width = 2048;

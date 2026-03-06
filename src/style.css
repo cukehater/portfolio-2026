@@ -1,7 +1,7 @@
 /*
- * CSS Reset - Modern Reset for Three.js Journey
+ * CSS Reset - Modern Reset for Three.js
  *
- * 이 파일은 Three.js Journey 프로젝트를 위한 현대적인 CSS 리셋 스타일시트입니다.
+ * 이 파일은 Three.js 프로젝트를 위한 현대적인 CSS 리셋 스타일시트입니다.
  * 브라우저 간 일관된 스타일링을 제공하고, 기본 스타일을 제거하여 개발자가
  * 더 나은 제어권을 가질 수 있도록 합니다.
  */
@@ -50,28 +50,6 @@ html {
   -moz-text-size-adjust: none;
   -webkit-text-size-adjust: none;
   text-size-adjust: none;
-}
-
-/*
-   * 특정 요소들의 기본 마진 제거 (Remove default margin in favour of better control)
-   *
-   * body, 제목 태그(h1-h6), 문단(p), figure, blockquote, 정의 목록(dl, dd) 등의
-   * 요소들은 브라우저에서 기본적으로 마진을 가지고 있습니다.
-   * 이 마진들을 제거하여 개발자가 CSS에서 더 정확하게 제어할 수 있도록 합니다.
-   */
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-figure,
-blockquote,
-dl,
-dd {
-  margin: 0;
 }
 
 /*
@@ -239,7 +217,6 @@ textarea:not([rows]) {
    * 이렇게 설정하면 WebGL 캔버스가 전체 화면을 덮는 배경 레이어처럼 동작하며,
    * Three.js 3D 장면이 화면 전체에 렌더링됩니다.
    */
-.webgl,
 #canvas {
   position: fixed;
   top: 0;

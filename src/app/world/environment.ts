@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import App from '../index.ts';
-import type Resources from '../utils/resources.ts';
+import Resources from '../utils/resources.ts';
 
 export default class Environment {
   app: App;
