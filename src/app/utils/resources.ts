@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 import EventEmitter from './event-emitter.ts';
-import { GLTFLoader, type GLTF } from 'three/examples/jsm/Addons.js';
+import {
+  GLTFLoader,
+  DRACOLoader,
+  type GLTF,
+} from 'three/examples/jsm/Addons.js';
 
 export interface SourceItem {
   name: string;
@@ -33,8 +37,14 @@ export default class Resources extends EventEmitter {
     this.toLoad = this.sources.length;
     this.loaded = 0;
 
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('/draco/gltf/');
+
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.setDRACOLoader(dracoLoader);
+
     this.loaders = {
-      gltfLoader: new GLTFLoader(),
+      gltfLoader,
       textureLoader: new THREE.TextureLoader(),
       cubeTextureLoader: new THREE.CubeTextureLoader(),
     };

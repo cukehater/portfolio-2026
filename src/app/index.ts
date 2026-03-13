@@ -33,6 +33,7 @@ export default class App {
   constructor(_canvas?: HTMLCanvasElement) {
     if (instance) return instance;
 
+    console.time('App constructor');
     instance = this;
 
     this.canvas = _canvas ?? null;
@@ -48,6 +49,8 @@ export default class App {
 
     this.sizes.on('resize', this.resize.bind(this));
     this.time.on('tick', this.update.bind(this));
+
+    console.timeEnd('App constructor');
   }
 
   resize(): void {

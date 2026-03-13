@@ -1,0 +1,72 @@
+---
+description: Three.js 마스터 개발자 가이드 — 최신 문법, 성능 최적화, 애니메이션, 초급자 눈높이 설명
+globs: "**/*.ts,**/*.tsx"
+alwaysApply: true
+---
+
+# Three.js 마스터 개발자 프롬프트
+
+Three.js 관련 코드를 작성하거나 리뷰할 때 아래 원칙을 적용한다.
+
+## 1. 최신 Three.js 문법
+
+- **r150+** 기준: `BufferGeometry` 사용, `Geometry` 대신 `BufferAttribute`/`BufferGeometry` 조합.
+- **임포트**: `three` 메인 패키지 + 필요한 것만 `three/examples/jsm/...` (Addons.js 등)에서 named import.
+- **타입**: `THREE.*` 대신 가능하면 `import type { Scene, Mesh } from 'three'` 등으로 명시.
+
+```typescript
+// ✅ 최신 스타일: BufferGeometry + BufferAttribute
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+geometry.setIndex(indices);
+```
+
+## 2. 성능 최적화
+
+- **재사용**: 동일 메시는 `geometry.clone()`, `material.clone()`으로 인스턴스화. 가능하면 `InstancedMesh` 사용.
+- **정리**: `dispose()` — geometry, material, texture는 씬에서 제거할 때 반드시 dispose.
+- **draw call 감소**: 병합(merge) 또는 InstancedMesh로 객체 수를 줄인다.
+- **애니메이션**: 매 프레임 새 객체 생성 금지. `requestAnimationFrame` 루프 안에서는 기존 객체 속성만 변경.
+
+```typescript
+// ✅ 제거 시 정리
+mesh.geometry.dispose();
+if (Array.isArray(mesh.material)) mesh.material.forEach(m => m.dispose());
+else mesh.material.dispose();
+```
+
+## 3. 애니메이션
+
+- **한 곳에서 구동**: 하나의 `requestAnimationFrame` 또는 라이브러리(gsap, three.js Clock)로 시간 기반 업데이트.
+- **delta 사용**: `clock.getDelta()`로 프레임 간 격차를 반영해 속도가 기기마다 일정하게 유지.
+- **매트릭스/쿼터니언**: 회전은 `Euler`보다 `Quaternion` 또는 매트릭스 조작이 짐블락 방지에 유리.
+
+```typescript
+// ✅ delta 기반 이동 (초급자 주석)
+const delta = clock.getDelta(); // 이전 프레임부터 걸린 시간(초)
+mesh.position.x += speed * delta;   // 기기 성능과 관계없이 일정한 속도
+```
+
+## 4. 설명과 주석 (초급자 눈높이)
+
+- **코드 블록**: 작성한 코드 위에 1~2문장으로 "이 코드가 무엇을 하는지" 요약.
+- **주석**: 왜 이 API를 쓰는지, 단위(미터/라디안 등), 주의할 점을 짧게 표시.
+- **용어**: Scene, Mesh, Material, Geometry, BufferGeometry 등 처음 나올 때 한 줄로 설명해도 좋음.
+
+```typescript
+// --- 그룹: 여러 메시를 하나처럼 움직이기 위해 사용 ---
+const group = new THREE.Group();
+group.add(mesh1);
+group.add(mesh2);
+scene.add(group);
+// group.position을 바꾸면 mesh1, mesh2가 함께 이동
+```
+
+## 5. 요약
+
+| 항목 | 적용 내용 |
+|------|-----------|
+| 문법 | BufferGeometry, 최신 import, 명시적 타입 |
+| 성능 | clone/InstancedMesh, dispose, draw call 절감 |
+| 애니메이션 | delta 기반, 단일 루프, 회전 시 짐블락 주의 |
+| 설명 | 블록 요약 + 초급자용 주석(왜, 단위, 주의점) |

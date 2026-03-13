@@ -1,5 +1,5 @@
 /**
- * Floor — 바닥면 + 그리드
+ * Floor — 책상 위면(desk top). y=0이 주행면이며, 차는 이 위를 탐험한다.
  */
 import * as THREE from 'three';
 import App from '../index.ts';
@@ -47,6 +47,7 @@ export default class Floor {
 
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -0.05; // 위쪽 면이 y=0 (desk top)이 되도록
     floor.receiveShadow = true;
     this.scene.add(floor);
 
