@@ -1,10 +1,10 @@
 /**
- * Clipboard — 클립보드
+ * Speaker — 스피커
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
 
-export default class Clipboard {
+export default class Speaker {
   parent: THREE.Object3D;
   group: THREE.Group;
 
@@ -12,8 +12,8 @@ export default class Clipboard {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(1.5);
-    this.group.position.set(0, 0.08, 0.32);
+    this.group.scale.setScalar(70);
+    this.group.position.set(32, 0.12, -15);
     this.group.rotation.set(0, 0, 0);
 
     this.group.traverse((child) => {

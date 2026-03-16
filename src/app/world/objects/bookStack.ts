@@ -3,18 +3,27 @@
  *
  * - 같은 book 메쉬를 clone해 10권 정도 쌓음
  * - 권마다 y 위치·x/z 미세 오프셋·회전을 줘서 정돈되지 않은 더미 느낌
+ * - 메쉬별 색은 MESH_COLORS로 분기, 머티리얼은 clone 후 수정해 공유로 인한 아티팩트 방지
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
+import App from '../../index.ts';
+import Debug from '../../utils/debug.ts';
 
-const BOOK_COUNT = 10;
-const BOOK_SCALE = 12;
+/** 메쉬 이름별 색 (해당 이름이 없으면 변경하지 않음) */
+// const MESH_COLORS: Record<string, number> = {
+//   book_cover: 0x000000,
+//   book_pages: 0xffffff,
+// };
+
+const BOOK_COUNT = 5;
+const BOOK_HEIGHT = 0.0339;
+const BOOK_SCALE = 45;
 /** 책 한 권당 세로 간격 (모델 로컬 기준). 겹치지 않게 쌓기 */
-const STACK_STEP_Y = 0.093;
 /** x/z 랜덤 오프셋 범위 (자연스러운 어긋남) */
-const OFFSET_XY = 0.08;
+const OFFSET_XY = 0.012;
 /** y축 회전 랜덤 범위(라디안) */
-const ROTATE_Y_RANGE = 0.12;
+const ROTATE_Y_RANGE = 0.2;
 /** 책이 살짝 기울어지는 x/z 회전 범위 */
 const TILT_RANGE = 0;
 
@@ -25,21 +34,20 @@ function seededRandom(seed: number): number {
 }
 
 export default class BookStack {
+  app: App;
+  debug: Debug;
   parent: THREE.Object3D;
   group: THREE.Group;
 
   constructor(parent: THREE.Object3D, gltf: GLTF) {
+    this.app = new App();
+    this.debug = this.app.debug;
+
     this.parent = parent;
     this.group = new THREE.Group();
 
-    this.group.scale.setScalar(BOOK_SCALE);
-    this.group.position.set(0.32, 0.1, 0);
-
-    for (let i = 1; i <= BOOK_COUNT; i++) {
+    for (let i = 0; i < BOOK_COUNT; i++) {
       const book = gltf.scene.clone(true);
-      const box = new THREE.Box3().setFromObject(book);
-      const size = new THREE.Vector3();
-      box.getSize(size);
 
       const rx = (seededRandom(i * 7) - 0.5) * 2 * OFFSET_XY;
       const rz = (seededRandom(i * 11 + 1) - 0.5) * 2 * OFFSET_XY;
@@ -47,25 +55,57 @@ export default class BookStack {
       const rotX = (seededRandom(i * 17 + 3) - 0.5) * 2 * TILT_RANGE;
       const rotZ = (seededRandom(i * 19 + 4) - 0.5) * 2 * TILT_RANGE;
 
-      book.position.set(rx, i * STACK_STEP_Y, rz);
+      book.position.set(rx, i * BOOK_HEIGHT, rz);
       book.rotation.set(rotX, rotY, rotZ);
 
       book.traverse((child) => {
-        if ((child as THREE.Mesh).isMesh) {
-          (child as THREE.Mesh).castShadow = true;
-          (child as THREE.Mesh).receiveShadow = true;
+        if (!(child instanceof THREE.Mesh)) return;
 
-          if (child.name === 'Architexture_1') {
-            (child as THREE.Mesh).material.color = new THREE.Color(0x00ff00);
-          } else {
-            (child as THREE.Mesh).material.color = new THREE.Color(0x000000);
-          }
-        }
+        child.castShadow = true;
+        child.receiveShadow = true;
+
+        // const colorHex = MESH_COLORS[child.name];
+        // if (colorHex !== undefined) {
+        //   const mat = child.material;
+        //   const clonedMat = Array.isArray(mat)
+        //     ? mat.map((m) => (m as THREE.Material).clone())
+        //     : (mat as THREE.Material).clone();
+        //   child.material = clonedMat as THREE.MeshStandardMaterial;
+        //   if ('color' in child.material && child.material.color)
+        //     child.material.color.setHex(colorHex);
+        // }
       });
 
       this.group.add(book);
     }
 
+    this.group.scale.setScalar(BOOK_SCALE);
+    this.group.position.set(-16, BOOK_HEIGHT, 19);
+    this.group.rotation.set(0, 0.22, 0);
+
     this.parent.add(this.group);
+
+    // this.setGui();
+  }
+
+  setGui(): void {
+    this.debug.gui
+      .add(this.group.position, 'y')
+      .min(-60)
+      .max(60)
+      .step(0.01)
+      .name('Book Stack Y');
+    this.debug.gui
+      .add(this.group.position, 'x')
+      .min(-60)
+      .max(60)
+      .step(0.01)
+      .name('Book Stack X');
+    this.debug.gui
+      .add(this.group.position, 'z')
+      .min(-60)
+      .max(60)
+      .step(0.01)
+      .name('Book Stack Z');
   }
 }

@@ -1,10 +1,10 @@
 /**
- * Clipboard — 클립보드
+ * Mug — 머그컵
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
 
-export default class Clipboard {
+export default class Mug {
   parent: THREE.Object3D;
   group: THREE.Group;
 
@@ -12,9 +12,9 @@ export default class Clipboard {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(1.5);
-    this.group.position.set(0, 0.08, 0.32);
-    this.group.rotation.set(0, 0, 0);
+    this.group.scale.setScalar(40);
+    this.group.position.set(16, 0.12, 18);
+    this.group.rotation.set(0, -Math.PI / 4, 0);
 
     this.group.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {

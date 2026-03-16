@@ -1,10 +1,10 @@
 /**
- * ToiletRoll — 화장지 (방 구석/장식)
+ * StandLamp — 스탠드 램프
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
 
-export default class ToiletRoll {
+export default class StandLamp {
   parent: THREE.Object3D;
   group: THREE.Group;
 
@@ -12,8 +12,8 @@ export default class ToiletRoll {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(1.2);
-    this.group.position.set(2.2, 0.15, 2);
+    this.group.scale.setScalar(50);
+    this.group.position.set(-35, 0.12, -5);
     this.group.rotation.set(0, 0, 0);
 
     this.group.traverse((child) => {

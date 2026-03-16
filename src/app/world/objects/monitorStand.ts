@@ -1,10 +1,10 @@
 /**
- * ComputerKeyboard — 책상 위 키보드
+ * MonitorStand — 모니터 스탠드
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
 
-export default class ComputerKeyboard {
+export default class MonitorStand {
   parent: THREE.Object3D;
   group: THREE.Group;
 
@@ -13,7 +13,7 @@ export default class ComputerKeyboard {
     this.group = gltf.scene.clone(true);
 
     this.group.scale.setScalar(50);
-    this.group.position.set(0, 0.5, 20);
+    this.group.position.set(0, 0, -15);
     this.group.rotation.set(0, 0, 0);
 
     this.group.traverse((child) => {
@@ -22,6 +22,10 @@ export default class ComputerKeyboard {
         (child as THREE.Mesh).receiveShadow = true;
       }
     });
+
+    const box = new THREE.Box3().setFromObject(this.group);
+    const size = new THREE.Vector3();
+    box.getSize(size);
 
     this.parent.add(this.group);
   }

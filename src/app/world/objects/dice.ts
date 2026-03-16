@@ -1,10 +1,10 @@
 /**
- * VerticalMouse — 책상 위 마우스 (키보드 옆)
+ * Dice — 주사위
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
 
-export default class VerticalMouse {
+export default class Dice {
   parent: THREE.Object3D;
   group: THREE.Group;
 
@@ -12,9 +12,9 @@ export default class VerticalMouse {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(1.8);
-    this.group.position.set(0.28, 0.08, 0.12);
-    this.group.rotation.set(0, 0, 0);
+    this.group.scale.setScalar(4);
+    this.group.position.set(-8, 0.12, 14);
+    this.group.rotation.set(0, Math.PI / 5, 0);
 
     this.group.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {

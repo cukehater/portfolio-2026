@@ -35,6 +35,9 @@ export default class Lights {
     dirLight.shadow.camera.right = 30;
     dirLight.shadow.camera.top = 30;
     dirLight.shadow.camera.bottom = -30;
+    // shadow acne(빗금/줄무늬) 완화: bias로 self-shadow 깊이 오차 보정
+    dirLight.shadow.bias = -0.001;
+    dirLight.shadow.normalBias = 0.02;
     this.scene.add(dirLight);
   }
 }

@@ -1,25 +1,20 @@
 /**
- * ComputerSpeaker — 책상 위 스피커 (모니터 양쪽)
+ * Fan — 선풍기
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
 
-export default class ComputerSpeaker {
+export default class Fan {
   parent: THREE.Object3D;
   group: THREE.Group;
 
-  constructor(
-    parent: THREE.Object3D,
-    gltf: GLTF,
-    side: 'left' | 'right' = 'left'
-  ) {
+  constructor(parent: THREE.Object3D, gltf: GLTF) {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    const x = side === 'left' ? -0.38 : 0.38;
-    this.group.scale.setScalar(1.5);
-    this.group.position.set(x, 0.12, -0.22);
-    this.group.rotation.set(0, 0, 0);
+    this.group.scale.setScalar(3);
+    this.group.position.set(28, 0.12, 12);
+    this.group.rotation.set(0, Math.PI / 4, 0);
 
     this.group.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {

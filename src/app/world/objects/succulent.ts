@@ -1,10 +1,10 @@
 /**
- * ComputerScreen — 책상 위 모니터
+ * Succulent — 다육식물
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
 
-export default class ComputerScreen {
+export default class Succulent {
   parent: THREE.Object3D;
   group: THREE.Group;
 
@@ -12,8 +12,8 @@ export default class ComputerScreen {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(70);
-    this.group.position.set(0, 0, -15);
+    this.group.scale.setScalar(3);
+    this.group.position.set(20, 0.12, -3);
     this.group.rotation.set(0, 0, 0);
 
     this.group.traverse((child) => {
