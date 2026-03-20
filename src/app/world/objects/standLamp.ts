@@ -3,6 +3,7 @@
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
+import { getObjectBoundSize } from '../../utils/objectBounds.ts';
 
 export default class StandLamp {
   parent: THREE.Object3D;
@@ -12,9 +13,11 @@ export default class StandLamp {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(50);
-    this.group.position.set(-35, 0.12, -5);
-    this.group.rotation.set(0, 0, 0);
+    const officeDeskSize = getObjectBoundSize('office_desk');
+
+    this.group.scale.setScalar(30);
+    this.group.position.set(officeDeskSize.x / 2 - 12, 0, 0);
+    this.group.rotation.set(0, -Math.PI / 2, 0);
 
     this.group.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {

@@ -3,6 +3,7 @@
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
+import { getObjectBoundSize } from '../../utils/objectBounds.ts';
 
 export default class OfficeChair {
   parent: THREE.Object3D;
@@ -12,13 +13,15 @@ export default class OfficeChair {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(70);
-    this.group.position.set(0, -57.599992752075195, 25); // 맵 밖(x=35), 방 바닥(y=-0.5)
+    const deskSize = getObjectBoundSize('office_desk');
+
+    this.group.scale.setScalar(45);
+    this.group.position.set(0, -deskSize.y, deskSize.z / 2 - 5);
     this.group.rotation.set(0, Math.PI, 0); // 책상 쪽 바라보기
 
     this.group.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
-        // (child as THREE.Mesh).castShadow = true;
+        (child as THREE.Mesh).castShadow = true;
         (child as THREE.Mesh).receiveShadow = true;
       }
     });

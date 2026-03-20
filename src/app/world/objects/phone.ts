@@ -1,11 +1,18 @@
 /**
- * Succulent — 다육식물
+ * Phone — 전화기
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
 import { getObjectBounds } from '../../utils/objectBounds.ts';
 
-export default class Succulent {
+/**
+ * 나를 소개하는 인터랙션
+ * - 자동차 오브젝트가 가까이 오면 진동, 화면 켜짐 (New Message 알림)
+ * - 화면 클릭시(Ray casting) 간략한 소개 모달
+ * - 자동차 오브젝트가 멀어지면 진동, 화면 꺼짐
+ */
+
+export default class Phone {
   parent: THREE.Object3D;
   group: THREE.Group;
 
@@ -13,16 +20,15 @@ export default class Succulent {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(40);
+    const deskMatBounds = getObjectBounds('desk_mat');
 
-    const monitorStandBounds = getObjectBounds('monitor_stand');
-
+    this.group.scale.setScalar(45);
     this.group.position.set(
-      monitorStandBounds.size.x / 2 - 6,
-      0,
-      monitorStandBounds.position.z / 2
+      deskMatBounds.size.x / 2 - 2.5,
+      deskMatBounds.size.y,
+      deskMatBounds.position.z / 2 + 6
     );
-    this.group.rotation.set(0, 0, 0);
+    this.group.rotation.set(0, Math.PI / 0.75, 0);
 
     this.group.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {

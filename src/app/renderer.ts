@@ -37,6 +37,8 @@ export default class Renderer {
     this.instance.setPixelRatio(this.sizes.pixelRatio);
     this.instance.shadowMap.enabled = true;
     this.instance.shadowMap.type = THREE.PCFShadowMap;
+    /** 노출이 너무 높으면 그림자·하이라이트 대비가 줄어듦 */
+    this.instance.toneMappingExposure = 1.02;
   }
 
   resize(): void {

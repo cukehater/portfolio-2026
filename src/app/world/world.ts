@@ -8,21 +8,31 @@ import App from '../index.ts';
 import Lights from './lights.ts';
 import { Car, createSceneModels } from './objects/index.ts';
 
+/** 등록된 오브젝트 바운딩: 월드 기준 AABB 크기 + 중심 위치 */
+export type ObjectBoundEntry = {
+  size: THREE.Vector3;
+  position: THREE.Vector3;
+};
+
+export type ObjectBoundKey = Record<string, ObjectBoundEntry>;
+
 export default class World {
   app: App;
   scene: THREE.Scene;
   lights: Lights;
   car: Car | null;
+  objectBounds: ObjectBoundKey;
 
   constructor() {
     this.app = new App();
     this.scene = this.app.scene;
-    this.lights = new Lights(this.scene);
-    this.car = null;
+    this.lights = new Lights(this.scene, this.app);
+    this.objectBounds = {};
 
+    this.car = null;
     this.app.resources.on('ready', () => {
-      createSceneModels(this.scene, this.app.resources);
-      // this.car = new Car(this.scene, this.app);
+      createSceneModels(this.scene);
+      this.car = new Car(this.scene);
     });
   }
 

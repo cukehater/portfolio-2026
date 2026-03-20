@@ -19,6 +19,10 @@ import Debug from './utils/debug.ts';
 
 let instance: App | null = null;
 
+export function getApp(): App {
+  return instance!;
+}
+
 export default class App {
   canvas!: HTMLCanvasElement | null;
   sizes!: Sizes;

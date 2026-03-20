@@ -8,7 +8,6 @@ export default class Debug {
       width: 200,
       title: '🪲 Debug UI',
     });
-
-    this.gui.close();
+    // this.gui.close();
   }
 }

@@ -7,8 +7,7 @@
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
-import App from '../../index.ts';
-import Debug from '../../utils/debug.ts';
+import { getObjectBounds } from '../../utils/objectBounds.ts';
 
 /** 메쉬 이름별 색 (해당 이름이 없으면 변경하지 않음) */
 // const MESH_COLORS: Record<string, number> = {
@@ -18,7 +17,6 @@ import Debug from '../../utils/debug.ts';
 
 const BOOK_COUNT = 5;
 const BOOK_HEIGHT = 0.0339;
-const BOOK_SCALE = 45;
 /** 책 한 권당 세로 간격 (모델 로컬 기준). 겹치지 않게 쌓기 */
 /** x/z 랜덤 오프셋 범위 (자연스러운 어긋남) */
 const OFFSET_XY = 0.012;
@@ -34,15 +32,10 @@ function seededRandom(seed: number): number {
 }
 
 export default class BookStack {
-  app: App;
-  debug: Debug;
   parent: THREE.Object3D;
   group: THREE.Group;
 
   constructor(parent: THREE.Object3D, gltf: GLTF) {
-    this.app = new App();
-    this.debug = this.app.debug;
-
     this.parent = parent;
     this.group = new THREE.Group();
 
@@ -79,33 +72,17 @@ export default class BookStack {
       this.group.add(book);
     }
 
-    this.group.scale.setScalar(BOOK_SCALE);
-    this.group.position.set(-16, BOOK_HEIGHT, 19);
+    this.group.scale.setScalar(25);
+
+    const deskMatBounds = getObjectBounds('desk_mat');
+
+    this.group.position.set(
+      -deskMatBounds.size.x / 2 + 3,
+      deskMatBounds.size.y,
+      deskMatBounds.position.z / 2 + 5
+    );
     this.group.rotation.set(0, 0.22, 0);
 
     this.parent.add(this.group);
-
-    // this.setGui();
-  }
-
-  setGui(): void {
-    this.debug.gui
-      .add(this.group.position, 'y')
-      .min(-60)
-      .max(60)
-      .step(0.01)
-      .name('Book Stack Y');
-    this.debug.gui
-      .add(this.group.position, 'x')
-      .min(-60)
-      .max(60)
-      .step(0.01)
-      .name('Book Stack X');
-    this.debug.gui
-      .add(this.group.position, 'z')
-      .min(-60)
-      .max(60)
-      .step(0.01)
-      .name('Book Stack Z');
   }
 }

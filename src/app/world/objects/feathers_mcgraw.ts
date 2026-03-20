@@ -1,11 +1,10 @@
 /**
- * Succulent — 다육식물
+ * Feathers McGraw — 페더 맥그로우 피규어
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
-import { getObjectBounds } from '../../utils/objectBounds.ts';
 
-export default class Succulent {
+export default class FeathersMcGraw {
   parent: THREE.Object3D;
   group: THREE.Group;
 
@@ -13,15 +12,8 @@ export default class Succulent {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(40);
-
-    const monitorStandBounds = getObjectBounds('monitor_stand');
-
-    this.group.position.set(
-      monitorStandBounds.size.x / 2 - 6,
-      0,
-      monitorStandBounds.position.z / 2
-    );
+    this.group.scale.setScalar(7);
+    this.group.position.set(-15, 0.12, -5);
     this.group.rotation.set(0, 0, 0);
 
     this.group.traverse((child) => {

@@ -3,6 +3,7 @@
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
+import { getObjectBounds } from '../../utils/objectBounds.ts';
 
 export default class Mug {
   parent: THREE.Object3D;
@@ -12,8 +13,15 @@ export default class Mug {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(40);
-    this.group.position.set(16, 0.12, 18);
+    this.group.scale.setScalar(25);
+
+    const deskMatBounds = getObjectBounds('desk_mat');
+
+    this.group.position.set(
+      deskMatBounds.size.x / 2 - 4,
+      deskMatBounds.size.y,
+      deskMatBounds.position.z / 2 + 2
+    );
     this.group.rotation.set(0, -Math.PI / 4, 0);
 
     this.group.traverse((child) => {

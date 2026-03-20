@@ -12,24 +12,14 @@ const sources: SourceItem[] = [
     path: '/models/cybertruck/wheel.glb',
   },
   {
-    name: 'office_chair',
-    type: 'gltfModel',
-    path: '/models/office_chair/office_chair.glb',
-  },
-  {
     name: 'office_desk',
     type: 'gltfModel',
     path: '/models/office_desk/office_desk.glb',
   },
   {
-    name: 'monitor_stand',
+    name: 'office_chair',
     type: 'gltfModel',
-    path: '/models/monitor_stand/monitor_stand.glb',
-  },
-  {
-    name: 'monitor',
-    type: 'gltfModel',
-    path: '/models/monitor/monitor.glb',
+    path: '/models/office_chair/office_chair.glb',
   },
   {
     name: 'desk_mat',
@@ -40,6 +30,46 @@ const sources: SourceItem[] = [
     name: 'laptop',
     type: 'gltfModel',
     path: '/models/laptop/laptop.glb',
+  },
+  {
+    name: 'phone',
+    type: 'gltfModel',
+    path: '/models/phone/phone.glb',
+  },
+  {
+    name: 'traffic_cone',
+    type: 'gltfModel',
+    path: '/models/traffic_cone/traffic_cone.glb',
+  },
+  {
+    name: 'sign_board',
+    type: 'gltfModel',
+    path: '/models/sign_board/sign_board.glb',
+  },
+  {
+    name: 'keycap',
+    type: 'gltfModel',
+    path: '/models/keycap/keycap.glb',
+  },
+  {
+    name: 'sticky_note',
+    type: 'gltfModel',
+    path: '/models/sticky_note/sticky_note.glb',
+  },
+  {
+    name: 'sticky_note_pad',
+    type: 'gltfModel',
+    path: '/models/sticky_note_pad/sticky_note_pad.glb',
+  },
+  {
+    name: 'monitor_stand',
+    type: 'gltfModel',
+    path: '/models/monitor_stand/monitor_stand.glb',
+  },
+  {
+    name: 'monitor',
+    type: 'gltfModel',
+    path: '/models/monitor/monitor.glb',
   },
   {
     name: 'book',
@@ -67,59 +97,19 @@ const sources: SourceItem[] = [
     path: '/models/photo_frame/photo_frame.glb',
   },
   {
-    name: 'guitar',
-    type: 'gltfModel',
-    path: '/models/guitar/guitar.glb',
-  },
-  {
-    name: 'guitar_stand',
-    type: 'gltfModel',
-    path: '/models/guitar_stand/guitar_stand.glb',
-  },
-  {
-    name: 'sticky_note',
-    type: 'gltfModel',
-    path: '/models/sticky_note/sticky_note.glb',
-  },
-  {
-    name: 'sticky_note_pad',
-    type: 'gltfModel',
-    path: '/models/sticky_note_pad/sticky_note_pad.glb',
-  },
-  {
-    name: 'traffic_cone',
-    type: 'gltfModel',
-    path: '/models/traffic_cone/traffic_cone.glb',
-  },
-  {
-    name: 'speaker',
-    type: 'gltfModel',
-    path: '/models/speaker/speaker.glb',
-  },
-  {
-    name: 'hand_strengthener',
-    type: 'gltfModel',
-    path: '/models/hand_strengthener/hand_strengthener.glb',
-  },
-  {
-    name: 'fan',
-    type: 'gltfModel',
-    path: '/models/fan/fan.glb',
-  },
-  {
     name: 'dice',
     type: 'gltfModel',
     path: '/models/dice/dice.glb',
   },
   {
-    name: 'chocolate_bar',
+    name: 'handcream',
     type: 'gltfModel',
-    path: '/models/chocolate_bar/chocolate_bar.glb',
+    path: '/models/handcream/handcream.glb',
   },
   {
-    name: 'basketball_net',
+    name: 'feathers_mcgraw',
     type: 'gltfModel',
-    path: '/models/basketball_net/basketball_net.glb',
+    path: '/models/feathers_mcgraw/feathers_mcgraw.glb',
   },
 ];
 

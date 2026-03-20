@@ -6,20 +6,38 @@
  * - Shift 누르면 부스터(가속) 속도 적용
  */
 import * as THREE from 'three';
-import App from '../../index.ts';
+import App, { getApp } from '../../index.ts';
 import { GLTF } from 'three/examples/jsm/Addons.js';
+import { getObjectBoundSize } from '../../utils/objectBounds.ts';
 
-const CAR_SPEED = 8;
-const CAR_SPEED_BOOST = 18;
-const CAR_TURN = 1.8;
-const ACCEL_RATE = 2.2;
-const DECEL_RATE = 3.5;
-const COAST_RATE = 2.0;
-
-/** 전륜 최대 조향 각도(라디안). 물리적으로 자연스러운 범위 */
-const MAX_STEER_ANGLE = Math.PI / 6; // 약 30°
-/** 이동 거리 1당 바퀴 회전량. 모델 크기에 맞게 조정 (값이 클수록 빨리 구름) */
-const WHEEL_ROLL_FACTOR = 2.5;
+const CONFIG = {
+  drive: {
+    speed: 8, // 기본 전진/후진 속도
+    speedBoost: 25, // Shift 부스터 속도
+    turn: 1.8, // 좌우 회전 강도(라디안/초)
+    accelRate: 2.2, // 가속 반응 속도
+    decelRate: 3.5, // 감속 반응 속도
+    coastRate: 2.0, // 키 떼었을 때 감속
+  },
+  wheel: {
+    maxSteerAngle: Math.PI / 6, // 전륜 최대 조향 각도(30°)
+    rollFactor: 2.5, // 이동 거리 → 바퀴 회전량 비율
+    positions: [
+      [-0.4, 0.25, -0.3],
+      [0.4, 0.25, -0.3],
+      [-0.4, 0.25, 0.76],
+      [0.4, 0.25, 0.76],
+    ] as [number, number, number][], // [전좌, 전우, 후좌, 후우] 로컬 위치
+  },
+  spawn: {
+    height: 5,
+    gravity: 22, // 낙하 중력
+    bounceInitial: 4.2, // 착지 시 첫 튕김 속도 (높을수록 더 높이 튐)
+    bounceDamping: 0.58, // 튕김 감쇠 (높을수록 에너지 유지 → 더 여러 번 통통 튐)
+    idleThreshold: 0.03, // 이 속도 이하면 idle 전환
+    bounceMax: 10, // 이 횟수 튕기면 강제 idle
+  },
+} as const;
 
 export default class Car {
   scene: THREE.Scene;
@@ -36,12 +54,18 @@ export default class Car {
   currentSpeed: number;
   velocity: number;
   keys: Record<string, boolean>;
+  /** 등장 애니메이션: 'falling' → 'bouncing' → 'idle' */
+  spawnState: 'falling' | 'bouncing' | 'idle' = 'falling';
+  /** Y축 속도 (낙하·튕김용) */
+  verticalVelocity = 0;
+  /** 바닥 접촉 횟수 (bouncing 중). 이걸로 강제 idle */
+  private landingBounceCount = 0;
 
-  constructor(scene: THREE.Scene, app: App) {
+  constructor(scene: THREE.Scene) {
+    this.app = getApp();
     this.scene = scene;
-    this.app = app;
     this.group = new THREE.Group();
-    this.currentSpeed = CAR_SPEED;
+    this.currentSpeed = CONFIG.drive.speed;
     this.velocity = 0;
     this.keys = {};
     this.setControls();
@@ -78,18 +102,11 @@ export default class Car {
     chassis.position.y = 0.4;
     this.group.add(chassis);
 
-    const wheelPositions: [number, number, number][] = [
-      [-0.4, 0.25, -0.3], // 전좌
-      [0.4, 0.25, -0.3], // 전우
-      [-0.4, 0.25, 0.76], // 후좌
-      [0.4, 0.25, 0.76], // 후우
-    ];
-
     if (!wheelGltf?.scene) return;
 
     this.wheelSteerPivots = [];
     this.wheelRollPivots = [];
-    wheelPositions.forEach((pos) => {
+    CONFIG.wheel.positions.forEach((pos) => {
       const steerPivot = new THREE.Group();
       steerPivot.position.set(...pos);
       const rollPivot = new THREE.Group();
@@ -103,32 +120,79 @@ export default class Car {
     });
 
     this.group.scale.setScalar(1);
-    this.group.position.set(0, 0, 0);
+
+    const officeDeskSize = getObjectBoundSize('office_desk');
+
+    this.group.position.set(officeDeskSize.x / 2 - 2.5, 0, 5.25);
+    this.group.rotation.set(0, Math.PI / 2, 0);
+    this.spawnState = 'idle';
+    this.verticalVelocity = 0;
+    this.landingBounceCount = 0;
   }
 
   setControls(): void {
     this.keys = {};
-    window.addEventListener('keydown', (e) => (this.keys[e.key] = true));
-    window.addEventListener('keyup', (e) => (this.keys[e.key] = false));
+    // WASD + 한글 키배치(ㅈ=W, ㅁ=A, ㄴ=S, ㅇ=D) 동시 지원
+    const controlKeys = new Set([
+      'ArrowUp',
+      'ArrowDown',
+      'ArrowLeft',
+      'ArrowRight',
+      'w',
+      'W',
+      'ㅈ',
+      'a',
+      'A',
+      'ㅁ',
+      's',
+      'S',
+      'ㄴ',
+      'd',
+      'D',
+      'ㅇ',
+      'Shift',
+    ]);
+    window.addEventListener('keydown', (e) => {
+      if (controlKeys.has(e.key)) e.preventDefault();
+      this.keys[e.key] = true;
+    });
+    window.addEventListener('keyup', (e) => {
+      this.keys[e.key] = false;
+    });
   }
 
   update(): void {
     const deltaSec = ((this.app?.time?.delta ?? 16) as number) * 0.001;
 
-    const movingForward = this.keys['ArrowUp'];
-    const movingBackward = this.keys['ArrowDown'];
+    this.updateLanding(deltaSec);
+    if (this.spawnState !== 'idle') return;
+
+    const movingForward =
+      this.keys['ArrowUp'] ||
+      this.keys['w'] ||
+      this.keys['W'] ||
+      this.keys['ㅈ'];
+    const movingBackward =
+      this.keys['ArrowDown'] ||
+      this.keys['s'] ||
+      this.keys['S'] ||
+      this.keys['ㄴ'];
     const isMoving = movingForward || movingBackward;
 
-    const targetSpeed = this.keys['Shift'] ? CAR_SPEED_BOOST : CAR_SPEED;
+    const targetSpeed = this.keys['Shift']
+      ? CONFIG.drive.speedBoost
+      : CONFIG.drive.speed;
     const isAccelerating = targetSpeed > this.currentSpeed;
-    const rate = isAccelerating ? ACCEL_RATE : DECEL_RATE;
+    const rate = isAccelerating
+      ? CONFIG.drive.accelRate
+      : CONFIG.drive.decelRate;
     const t = 1 - Math.exp(-rate * deltaSec);
     this.currentSpeed += (targetSpeed - this.currentSpeed) * t;
 
     let targetVelocity = 0;
     if (movingForward) targetVelocity = this.currentSpeed;
     else if (movingBackward) targetVelocity = -this.currentSpeed;
-    const velocityRate = isMoving ? rate : COAST_RATE;
+    const velocityRate = isMoving ? rate : CONFIG.drive.coastRate;
     const tVel = 1 - Math.exp(-velocityRate * deltaSec);
     this.velocity += (targetVelocity - this.velocity) * tVel;
     if (Math.abs(this.velocity) < 0.001) this.velocity = 0;
@@ -144,14 +208,57 @@ export default class Car {
       // 감속 중에는 현재 속도 비율만큼만 조향 (멈출수록 회전 약해짐)
       const speedRatio = isMoving
         ? 1
-        : Math.min(1, Math.abs(this.velocity) / CAR_SPEED);
-      const turn = CAR_TURN * deltaSec * speedRatio;
-      if (this.keys['ArrowLeft']) this.group.rotation.y += turn * steerDir;
-      if (this.keys['ArrowRight']) this.group.rotation.y -= turn * steerDir;
+        : Math.min(1, Math.abs(this.velocity) / CONFIG.drive.speed);
+      const turn = CONFIG.drive.turn * deltaSec * speedRatio;
+      if (
+        this.keys['ArrowLeft'] ||
+        this.keys['a'] ||
+        this.keys['A'] ||
+        this.keys['ㅁ']
+      )
+        this.group.rotation.y += turn * steerDir;
+      if (
+        this.keys['ArrowRight'] ||
+        this.keys['d'] ||
+        this.keys['D'] ||
+        this.keys['ㅇ']
+      )
+        this.group.rotation.y -= turn * steerDir;
     }
 
     // --- 바퀴 애니메이션: 구르기(X축) + 전륜 조향(Y축) ---
     this.updateWheels(deltaSec);
+  }
+
+  /**
+   * 공중 → 낙하 → 착지 → 살짝 튕김 → 정지. idle 이전에는 조종 불가.
+   */
+  private updateLanding(deltaSec: number): void {
+    if (this.spawnState === 'idle') return;
+
+    this.verticalVelocity -= CONFIG.spawn.gravity * deltaSec;
+    this.group.position.y += this.verticalVelocity * deltaSec;
+
+    const floorY = 0;
+    if (this.group.position.y <= floorY) {
+      this.group.position.y = floorY;
+      if (this.spawnState === 'falling') {
+        this.verticalVelocity = CONFIG.spawn.bounceInitial;
+        this.spawnState = 'bouncing';
+        this.landingBounceCount = 1;
+      } else {
+        this.landingBounceCount += 1;
+        this.verticalVelocity *= -CONFIG.spawn.bounceDamping;
+        const smallVelocity =
+          Math.abs(this.verticalVelocity) < CONFIG.spawn.idleThreshold;
+        const tooManyBounces =
+          this.landingBounceCount >= CONFIG.spawn.bounceMax;
+        if (smallVelocity || tooManyBounces) {
+          this.verticalVelocity = 0;
+          this.spawnState = 'idle';
+        }
+      }
+    }
   }
 
   /**
@@ -161,12 +268,24 @@ export default class Car {
   private updateWheels(deltaSec: number): void {
     if (this.wheelRollPivots.length < 4) return;
 
-    this.cumulativeWheelRoll -= this.velocity * deltaSec * WHEEL_ROLL_FACTOR;
+    this.cumulativeWheelRoll -=
+      this.velocity * deltaSec * CONFIG.wheel.rollFactor;
 
-    // 바퀴 시각: 키 방향 그대로 (왼쪽 키 = 전륜 왼쪽 꺾임). 후진 시에도 동일.
     let targetSteer = 0;
-    if (this.keys['ArrowLeft']) targetSteer = MAX_STEER_ANGLE;
-    if (this.keys['ArrowRight']) targetSteer = -MAX_STEER_ANGLE;
+    if (
+      this.keys['ArrowLeft'] ||
+      this.keys['a'] ||
+      this.keys['A'] ||
+      this.keys['ㅁ']
+    )
+      targetSteer = CONFIG.wheel.maxSteerAngle;
+    if (
+      this.keys['ArrowRight'] ||
+      this.keys['d'] ||
+      this.keys['D'] ||
+      this.keys['ㅇ']
+    )
+      targetSteer = -CONFIG.wheel.maxSteerAngle;
     const steerLerp = 1 - Math.exp(-12 * deltaSec);
     this.currentSteerAngle +=
       (targetSteer - this.currentSteerAngle) * steerLerp;

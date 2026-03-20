@@ -3,6 +3,7 @@
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
+import { getObjectBounds } from '../../utils/objectBounds.ts';
 
 export default class PhotoFrame {
   parent: THREE.Object3D;
@@ -12,8 +13,15 @@ export default class PhotoFrame {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(40);
-    this.group.position.set(28, 0.12, 0);
+    this.group.scale.setScalar(30);
+
+    const monitorStandBounds = getObjectBounds('monitor_stand');
+
+    this.group.position.set(
+      monitorStandBounds.size.x / 2 - 1,
+      0,
+      monitorStandBounds.position.z / 2 + 1
+    );
     this.group.rotation.set(0, -Math.PI / 6, 0);
 
     this.group.traverse((child) => {

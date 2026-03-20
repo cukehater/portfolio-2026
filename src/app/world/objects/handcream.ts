@@ -1,11 +1,11 @@
 /**
- * Succulent — 다육식물
+ * Handcream — 손 크림
  */
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
 import { getObjectBounds } from '../../utils/objectBounds.ts';
 
-export default class Succulent {
+export default class Handcream {
   parent: THREE.Object3D;
   group: THREE.Group;
 
@@ -13,16 +13,10 @@ export default class Succulent {
     this.parent = parent;
     this.group = gltf.scene.clone(true);
 
-    this.group.scale.setScalar(40);
+    const deskMatBounds = getObjectBounds('desk_mat');
 
-    const monitorStandBounds = getObjectBounds('monitor_stand');
-
-    this.group.position.set(
-      monitorStandBounds.size.x / 2 - 6,
-      0,
-      monitorStandBounds.position.z / 2
-    );
-    this.group.rotation.set(0, 0, 0);
+    this.group.scale.setScalar(10);
+    this.group.position.set(-7, deskMatBounds.size.y, 5);
 
     this.group.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {

@@ -53,7 +53,7 @@ export default class CukehaterText {
 
       const material = new THREE.MeshMatcapMaterial({
         matcap: matcapTexture,
-        color: 0x1a1a1a,
+        color: 0xffffff,
       });
 
       this.textMesh = new THREE.Mesh(textGeometry, material);
