@@ -4,6 +4,7 @@ import prettierConfig from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
 import tseslint from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
+import checkFile from 'eslint-plugin-check-file';
 
 export default [
   { ignores: ['dist', 'node_modules', 'static'] }, // 린트 제외 경로
@@ -70,6 +71,46 @@ export default [
         'ignorePackages',
         { js: 'always', ts: 'always' },
       ], // import 확장자 필수
+    },
+  },
+  {
+    files: ['**/*.ts'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint.plugin,
+    },
+    rules: {
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          // 한 모듈에서 값+타입을 같이 쓸 때는 `import { type T, v }` 한 줄로 유지 (no-duplicate-imports와 충돌 방지)
+          fixStyle: 'inline-type-imports',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/app/**/*.ts'],
+    plugins: {
+      'check-file': checkFile,
+    },
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        { 'src/app/**/*.ts': 'KEBAB_CASE' },
+        { ignoreMiddleExtensions: true },
+      ],
+      'check-file/folder-naming-convention': [
+        'error',
+        { 'src/app/**/': 'KEBAB_CASE' },
+      ],
     },
   },
 ];

@@ -11,6 +11,7 @@ let instance: App | null = null;
 export function getApp(): App {
   return instance!;
 }
+
 export default class App {
   canvas!: HTMLCanvasElement | null;
   sizes!: Sizes;
@@ -21,10 +22,13 @@ export default class App {
   renderer!: Renderer;
   world!: World;
   debug!: Debug;
+
   constructor(_canvas?: HTMLCanvasElement) {
     if (instance) return instance;
     instance = this;
+
     if (!_canvas) throw new Error('캔버스 요소를 찾을 수 없습니다.');
+
     this.canvas = _canvas;
     this.sizes = new Sizes();
     this.time = new Time();
@@ -37,10 +41,12 @@ export default class App {
     this.sizes.on('resize', this.resize.bind(this));
     this.time.on('tick', this.update.bind(this));
   }
+
   resize(): void {
     this.camera.resize();
     this.renderer.resize();
   }
+
   update(): void {
     this.camera.update();
     this.world.update();

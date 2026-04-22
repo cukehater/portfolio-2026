@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import App from './index.ts';
-import Camera from './camera.ts';
-import Sizes from './lib/sizes.ts';
+import type Camera from './camera.ts';
+import type Sizes from './lib/sizes.ts';
+
 export default class Renderer {
   app: App;
   canvas: HTMLCanvasElement | null;
@@ -9,6 +10,7 @@ export default class Renderer {
   scene: THREE.Scene;
   camera: Camera;
   instance!: THREE.WebGLRenderer;
+
   constructor() {
     this.app = new App();
     this.canvas = this.app.canvas;
@@ -17,6 +19,7 @@ export default class Renderer {
     this.camera = this.app.camera;
     this.setInstance();
   }
+
   setInstance(): void {
     this.instance = new THREE.WebGLRenderer({
       canvas: this.canvas as HTMLCanvasElement,
@@ -24,16 +27,16 @@ export default class Renderer {
     });
     this.instance.setSize(this.sizes.width, this.sizes.height);
     this.instance.setPixelRatio(this.sizes.pixelRatio);
-    this.instance.shadowMap.enabled = true;
-    this.instance.shadowMap.type = THREE.PCFShadowMap;
     this.instance.toneMapping = THREE.ReinhardToneMapping;
     this.instance.toneMappingExposure = 3;
     this.instance.outputColorSpace = THREE.SRGBColorSpace;
   }
+
   resize(): void {
     this.instance.setSize(this.sizes.width, this.sizes.height);
     this.instance.setPixelRatio(this.sizes.pixelRatio);
   }
+
   update(): void {
     this.instance.render(this.scene, this.camera.instance);
   }

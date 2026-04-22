@@ -1,44 +1,44 @@
-import { SourceItem } from './lib/resources.ts';
+import type { SourceItem } from './lib/resources.ts';
 const sources: SourceItem[] = [
   {
-    name: 'cybertruck_body',
-    type: 'gltfModel',
-    path: '/models/cybertruck/body.glb',
+    name: 'cyber_truck_body',
+    path: '/models/cyber_truck/body.glb',
   },
   {
-    name: 'cybertruck_wheel',
-    type: 'gltfModel',
-    path: '/models/cybertruck/wheel.glb',
+    name: 'cyber_truck_wheel',
+    path: '/models/cyber_truck/wheel.glb',
   },
   {
-    name: 'cybertruck_head_light',
-    type: 'gltfModel',
-    path: '/models/cybertruck/head_light.glb',
+    name: 'cyber_truck_head_light',
+    path: '/models/cyber_truck/head_light.glb',
   },
   {
-    name: 'cybertruck_tail_light',
-    type: 'gltfModel',
-    path: '/models/cybertruck/tail_light.glb',
+    name: 'cyber_truck_tail_light',
+    path: '/models/cyber_truck/tail_light.glb',
   },
   {
     name: 'office_desk',
-    type: 'gltfModel',
     path: '/models/office_desk/office_desk.glb',
   },
   {
     name: 'desk_mat',
-    type: 'gltfModel',
     path: '/models/desk_mat/desk_mat.glb',
   },
   {
     name: 'book',
-    type: 'gltfModel',
     path: '/models/book/book.glb',
   },
   {
     name: 'laptop',
-    type: 'gltfModel',
     path: '/models/laptop/laptop.glb',
+  },
+  {
+    name: 'phone',
+    path: '/models/phone/phone.glb',
+  },
+  {
+    name: 'mug',
+    path: '/models/mug/mug.glb',
   },
 ];
 export default sources;

@@ -1,23 +1,27 @@
 import * as THREE from 'three';
 import type App from '../index.ts';
 import type Debug from '@/lib/debug.ts';
+
+/** 연무·석조 톤: 상단은 밝은 회청·연분홍, 하단은 낮은 채도의 청회·토프 먹색 */
 const LIGHTS_CONFIG = {
-  backgroundTopLeft: '#cfe5ff',
-  backgroundTopRight: '#f6dcc3',
-  backgroundBottomRight: '#f2c28d',
-  backgroundBottomLeft: '#d7b08a',
+  backgroundTopLeft: '#e2eaf0',
+  backgroundTopRight: '#f2e8ec',
+  backgroundBottomRight: '#6a5c62',
+  backgroundBottomLeft: '#55606c',
 } as const;
+
 export default class Lights {
   scene: THREE.Scene;
   app: App;
   debug: Debug;
-  private backgroundTexture: THREE.DataTexture | null = null;
-  private background = {
+  backgroundTexture: THREE.DataTexture | null = null;
+  background = {
     topLeft: LIGHTS_CONFIG.backgroundTopLeft,
     topRight: LIGHTS_CONFIG.backgroundTopRight,
     bottomRight: LIGHTS_CONFIG.backgroundBottomRight,
     bottomLeft: LIGHTS_CONFIG.backgroundBottomLeft,
   };
+
   constructor(scene: THREE.Scene, app: App) {
     this.scene = scene;
     this.app = app;
@@ -25,11 +29,13 @@ export default class Lights {
     this.setSceneEnv();
     this.setGui();
   }
+
   setSceneEnv(): void {
     this.applyFolioBackground();
     this.scene.fog = null;
   }
-  private applyFolioBackground(): void {
+
+  applyFolioBackground(): void {
     const topLeft = new THREE.Color(this.background.topLeft);
     const topRight = new THREE.Color(this.background.topRight);
     const bottomRight = new THREE.Color(this.background.bottomRight);
@@ -56,6 +62,7 @@ export default class Lights {
       Math.round(topRight.b * 255),
       255,
     ]);
+
     this.backgroundTexture?.dispose();
     this.backgroundTexture = new THREE.DataTexture(data, 2, 2);
     this.backgroundTexture.colorSpace = THREE.SRGBColorSpace;
@@ -64,7 +71,8 @@ export default class Lights {
     this.backgroundTexture.needsUpdate = true;
     this.scene.background = this.backgroundTexture;
   }
-  private setGui(): void {
+
+  setGui(): void {
     const folder = this.debug.gui.addFolder('💡 Lights');
     folder
       .addColor(this.background, 'topLeft')

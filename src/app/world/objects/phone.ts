@@ -7,11 +7,13 @@ import {
   syncTutorialFakeShadow,
 } from '@/lib/fake-shadow.ts';
 
-export default class Laptop {
+/** 튜토리얼 구체의 `position.y`처럼 0~1로 쓰기 위한 높이 스케일(월드) */
+const BOUNCE_HEIGHT_REF = 0.2;
+
+export default class Phone {
   parent: THREE.Object3D;
   group: THREE.Group;
   private shadow: THREE.Mesh | null = null;
-  /** 튜토리얼 `plane.position.y` — 책상면(parent 로컬 Y) */
   private floorYLocal: number;
 
   constructor(parent: THREE.Object3D, gltf: GLTF) {
@@ -31,7 +33,7 @@ export default class Laptop {
     const planeSize = Math.max(1.5, Math.max(sz.x, sz.z));
 
     this.shadow = createTutorialFakeShadowMesh({
-      name: 'laptop_fake_shadow',
+      name: 'phone_fake_shadow',
       planeSize,
     });
 
@@ -44,28 +46,27 @@ export default class Laptop {
     const deskMatBounds = getObjectBounds('desk_mat');
 
     this.group.position.set(
-      deskMatBounds.position.x,
+      deskMatBounds.position.x + deskMatBounds.size.x / 3.5,
       deskMatBounds.size.y,
-      deskMatBounds.position.z
+      deskMatBounds.position.z + 1.5
     );
   }
 
   setTexture() {
     applyTextureToMeshes(this.group, [
       {
-        name: 'laptop',
+        name: 'phone_body',
         type: 'matcap',
         src: '/textures/matcaps/metal.png',
-        options: { color: 0xaaaaaa },
+        options: { color: 0xffffff },
       },
       {
-        name: 'screen',
+        name: 'phone_screen',
         type: 'matcap',
         options: { color: 0x111111 },
       },
       {
-        name: 'keypad',
-        src: '/textures/matcaps/keypad.png',
+        name: 'phone_button',
         type: 'matcap',
       },
     ]);
@@ -73,8 +74,16 @@ export default class Laptop {
 
   update(): void {
     if (!this.shadow) return;
+
+    const bounceY = Math.min(
+      Math.max(
+        (this.group.position.y - this.floorYLocal) / BOUNCE_HEIGHT_REF,
+        0
+      ),
+      1
+    );
     syncTutorialFakeShadow(this.shadow, this.group, this.floorYLocal, {
-      bounceY: 0,
+      bounceY,
     });
   }
 }

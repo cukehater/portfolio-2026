@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import type * as THREE from 'three';
 import EventEmitter from './event-emitter.ts';
 import {
   GLTFLoader,
@@ -7,7 +7,6 @@ import {
 } from 'three/examples/jsm/Addons.js';
 export interface SourceItem {
   name: string;
-  type: 'gltfModel';
   path: string;
 }
 interface Loaders {
@@ -22,19 +21,25 @@ export default class Resources extends EventEmitter {
   loaders: Loaders;
   constructor(sources: SourceItem[]) {
     super();
+
     this.sources = sources;
     this.items = {};
     this.toLoad = this.sources.length;
     this.loaded = 0;
+
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('/draco/gltf/');
+
     const gltfLoader = new GLTFLoader();
     gltfLoader.setDRACOLoader(dracoLoader);
+
     this.loaders = {
       gltfLoader,
     };
+
     this.startLoading();
   }
+
   startLoading(): void {
     for (const source of this.sources) {
       this.loaders.gltfLoader.load(source.path, (file: GLTF) => {
@@ -42,9 +47,11 @@ export default class Resources extends EventEmitter {
       });
     }
   }
+
   sourceLoaded(source: SourceItem, file: LoadedItem): void {
     this.items[source.name] = file;
     this.loaded++;
+
     if (this.loaded === this.toLoad) {
       this.trigger('objectsReady');
     }

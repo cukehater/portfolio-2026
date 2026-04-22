@@ -18,7 +18,7 @@
 import * as THREE from 'three';
 import type { GLTF } from 'three/examples/jsm/Addons.js';
 import App from '../../index.ts';
-// import { getObjectBoundSize } from '@/lib/objectBounds.ts';
+// import { getObjectBoundSize } from '@/lib/object-bounds.ts';
 
 /** 키보드로 추적할 키 목록 — 여기 없는 키는 무시합니다. */
 const CONTROL_KEYS = new Set([
@@ -185,7 +185,6 @@ function applyBodyMaterials(
 
 /**
  * 전조등/후미등처럼 “발광 클러스터” 메시에 matcap을 입힙니다.
- * 그림자는 끄는 편이 자연스럽습니다(스스로 그림자를 드리우면 어색).
  */
 function applyLightClusterMaterial(
   root: THREE.Object3D,
@@ -199,8 +198,6 @@ function applyLightClusterMaterial(
       matcap,
       color: colorHex,
     });
-    child.castShadow = false;
-    child.receiveShadow = false;
   });
 }
 
@@ -215,8 +212,6 @@ function applyWheelTireAndRimMaterials(
 ): void {
   wheelRoot.traverse((child) => {
     if (!(child instanceof THREE.Mesh)) return;
-    child.castShadow = true;
-    child.receiveShadow = true;
 
     if (child.name === 'tire') {
       disposeMeshMaterial(child);
@@ -324,16 +319,16 @@ export default class Car {
   private async mountFromResources(): Promise<void> {
     if (this._assetsMounted) return;
 
-    const bodyGltf = this.app.resources.items['cybertruck_body'] as
+    const bodyGltf = this.app.resources.items['cyber_truck_body'] as
       | GLTF
       | undefined;
-    const headGltf = this.app.resources.items['cybertruck_head_light'] as
+    const headGltf = this.app.resources.items['cyber_truck_head_light'] as
       | GLTF
       | undefined;
-    const tailGltf = this.app.resources.items['cybertruck_tail_light'] as
+    const tailGltf = this.app.resources.items['cyber_truck_tail_light'] as
       | GLTF
       | undefined;
-    const wheelGltf = this.app.resources.items['cybertruck_wheel'] as
+    const wheelGltf = this.app.resources.items['cyber_truck_wheel'] as
       | GLTF
       | undefined;
 
